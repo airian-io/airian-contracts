@@ -52,7 +52,10 @@ describe("WhiteListNFT Test", function () {
 
     if (chainId === 1001) {
       // eslint-disable-next-line node/no-unsupported-features/node-builtins
-      const jsonData = await fs.promises.readFile("./list.data", "utf8");
+      const jsonData = await fs.promises.readFile(
+        "./test/data/list.data",
+        "utf8"
+      );
       const allList = JSON.parse(jsonData);
       for (let i = 0; i < nTest; i++) {
         list.push(allList[i]);
@@ -61,7 +64,7 @@ describe("WhiteListNFT Test", function () {
       for (let i = 0; i < nTest; i++) {
         list.push(signers[i].address);
       }
-      await fs.writeFileSync("./list.data", JSON.stringify(list));
+      await fs.writeFileSync("./test/data/list.data", JSON.stringify(list));
     }
 
     // console.log(list);
