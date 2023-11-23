@@ -331,7 +331,7 @@ contract MysteryBox is ERC721Token, IERC721Receiver, ReentrancyGuard {
         uint256 index,
         uint256 amount,
         address to
-    ) public whenNotPaused nonReentrant {
+    ) public whenNotPaused nonReentrant onlyRole(MINTER_ROLE) {
         require(key != address(0), "key contract not set");
         require(to != address(0), "Wrong claim address");
         require(block.timestamp > lockup, "Not yet reveal time reached");

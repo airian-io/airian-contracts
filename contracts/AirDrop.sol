@@ -231,7 +231,7 @@ contract AirDrop is ERC721Token, IERC721Receiver, ReentrancyGuard {
         uint256 _itemIx,
         uint256 amount,
         address to
-    ) public {
+    ) public onlyRole(MINTER_ROLE) {
         require(block.timestamp > launch, "Not yet launch time reached");
         require(totalItems > totalSold, "aridrop sold out");
 
