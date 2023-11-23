@@ -141,8 +141,8 @@ contract Subscription is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         bool _andor,
         IWitnetRandomness _witnetRandomness
     ) {
-        setConfig(configValues, _quote, _payment, _treasury, _mysterybox);
-        setWhiteList(_whitelist, _types, _andor);
+        _setConfig(configValues, _quote, _payment, _treasury, _mysterybox);
+        _setWhiteList(_whitelist, _types, _andor);
 
         assert(address(_witnetRandomness) != address(0));
         witnet = _witnetRandomness;
@@ -707,11 +707,11 @@ contract Subscription is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         emit Refund(to, _amount, fee);
     }
 
-    function setWhiteList(
+    function _setWhiteList(
         address[] memory _whitelist,
         bool[] memory _types,
         bool _andor
-    ) public onlyOwner {
+    ) private {
         require(_whitelist.length == _types.length, "Invalid array length");
 
         for (uint256 i = 0; i < _types.length; i++) {
@@ -734,13 +734,13 @@ contract Subscription is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
      * index 7 = _startClaim : Claim 시작 시간
      */
 
-    function setConfig(
+    function _setConfig(
         uint256[] memory configValues,
         address _quote,
         address _payment,
         address _treasury,
         address _mysterybox
-    ) private onlyOwner {
+    ) private {
         require(configValues.length == 8, "missing config values");
 
         config.ratePrice = configValues[0];

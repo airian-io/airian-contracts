@@ -136,7 +136,7 @@ contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         bool _andor,
         IWitnetRandomness _witnetRandomness
     ) {
-        setConfig(configValues, _quote, _payment, _treasury, _mysterybox);
+        _setConfig(configValues, _quote, _payment, _treasury, _mysterybox);
         setWhiteList(_whitelist, _types, _andor);
         totalItems = config.total.div(config.perTicket);
         available = totalItems;
@@ -638,13 +638,13 @@ contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         emit SetWhiteList(whitelist, _types, andor);
     }
 
-    function setConfig(
+    function _setConfig(
         uint256[] memory configValues,
         address _quote,
         address _payment,
         address _treasury,
         address _mysterybox
-    ) private onlyOwner {
+    ) private {
         require(configValues.length == 8, "missing config values");
 
         /*

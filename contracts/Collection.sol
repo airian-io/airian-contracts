@@ -72,17 +72,17 @@ contract Collection is ERC721Token, IERC721Receiver, ReentrancyGuard {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(PAUSER_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);
-        setLaunch(configValues[0]);
-        setLockup(configValues[1]);
-        setConfig(_payment, _treasury, configValues[2]);
-        setQuote(_quote);
+        _setLaunch(configValues[0]);
+        _setLockup(configValues[1]);
+        _setConfig(_payment, _treasury, configValues[2]);
+        _setQuote(_quote);
     }
 
-    function setConfig(
+    function _setConfig(
         address _payment,
         address _treasury,
         uint256 _feeRate
-    ) public onlyOwner {
+    ) private {
         require(_payment != address(0), "invalid payment address");
         require(_treasury != address(0), "invalid treasury address");
         payment = _payment;
@@ -92,17 +92,17 @@ contract Collection is ERC721Token, IERC721Receiver, ReentrancyGuard {
         emit SetConfig(payment, treasury, feeRate);
     }
 
-    function setLaunch(uint256 _launch) public onlyOwner {
+    function _setLaunch(uint256 _launch) private {
         launch = _launch;
         emit SetLaunch(launch);
     }
 
-    function setLockup(uint256 _lockup) public onlyOwner {
+    function _setLockup(uint256 _lockup) private {
         lockup = _lockup;
         emit SetLockup(lockup);
     }
 
-    function setQuote(address _quote) public onlyOwner {
+    function _setQuote(address _quote) private {
         quote = _quote;
         emit SetQuote(quote);
     }

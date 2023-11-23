@@ -119,27 +119,27 @@ contract MysteryBox is ERC721Token, IERC721Receiver, ReentrancyGuard {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(PAUSER_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);
-        setLaunch(configValues[0]);
-        setLockup(configValues[1]);
-        setMboxKey(_key, configValues[2]);
-        setConfig(_payment, _treasury, configValues[3]);
-        setQuote(_quote);
+        _setLaunch(configValues[0]);
+        _setLockup(configValues[1]);
+        _setMboxKey(_key, configValues[2]);
+        _setConfig(_payment, _treasury, configValues[3]);
+        _setQuote(_quote);
         assert(address(_witnetRandomness) != address(0));
         witnet = _witnetRandomness;
     }
 
-    function setMboxKey(address _key, uint256 _price) public onlyOwner {
+    function _setMboxKey(address _key, uint256 _price) private {
         require(_key != address(0), "Wrong MysteryBox contract address");
         key = _key;
         price = _price;
         emit SetMboxKey(key, price);
     }
 
-    function setConfig(
+    function _setConfig(
         address _payment,
         address _treasury,
         uint256 _feeRate
-    ) public onlyOwner {
+    ) private {
         // In case of null subscription contract handle clearing...
         require(_payment != address(0), "invalid payment address");
         require(_treasury != address(0), "invalid treasury address");
@@ -178,7 +178,7 @@ contract MysteryBox is ERC721Token, IERC721Receiver, ReentrancyGuard {
     //        emit SetSubscription(_subscription);
     //    }
 
-    function setLaunch(uint256 _launch) public onlyOwner {
+    function _setLaunch(uint256 _launch) private {
         //        if (_launch == 0) {
         //            pause();
         //        } else {
@@ -190,12 +190,12 @@ contract MysteryBox is ERC721Token, IERC721Receiver, ReentrancyGuard {
         //        }
     }
 
-    function setLockup(uint256 _lockup) public onlyOwner {
+    function _setLockup(uint256 _lockup) private {
         lockup = _lockup;
         emit SetLockup(lockup);
     }
 
-    function setQuote(address _quote) public onlyOwner {
+    function _setQuote(address _quote) private {
         quote = _quote;
         emit SetQuote(quote);
     }
