@@ -362,7 +362,7 @@ contract AirDrop is ERC721Token, IERC721Receiver, ReentrancyGuard {
     //        }
     //    }
 
-    receive() external payable {}
+    //    receive() external payable {}
 
     function onERC721Received(
         address operator,
