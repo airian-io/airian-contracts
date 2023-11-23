@@ -68,7 +68,7 @@ contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         bool status;
         bool claimed;
     }
-    Book[MaxBooking] public booking;
+    Book[] public booking;
 
     mapping(address => uint256) public depositList; // Deposit Fund
     using Counters for Counters.Counter;

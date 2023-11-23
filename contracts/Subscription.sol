@@ -81,7 +81,7 @@ contract Subscription is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
     mapping(address => uint256) public depositIndex; // Book Index
     uint256 public totStakers = 0;
 
-    Book[MaxBooking] public booking;
+    Book[] public booking;
     uint256 private _inProcess = 0;
     uint256[] private randList;
     uint256 private _used = 0;
