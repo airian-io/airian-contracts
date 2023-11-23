@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@uniswap/lib/contracts/libraries/TransferHelper.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol";
@@ -23,6 +23,7 @@ interface IERC721Burnable {
 contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
     using SafeMath for uint256;
     using SafeMath for uint32;
+    using SafeERC20 for IERC20;
 
     struct Config {
         address quote;
@@ -554,7 +555,7 @@ contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
                 //                    config.treasury,
                 //                    share
                 //                );
-                IERC20(config.quote).transfer(config.treasury, share);
+                IERC20(config.quote).safeTransfer(config.treasury, share);
                 // Game company earnings
                 //                TransferHelper.safeTransferFrom(
                 //                    config.quote,
@@ -562,7 +563,7 @@ contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
                 //                    config.payment,
                 //                    profit
                 //                );
-                IERC20(config.quote).transfer(config.payment, profit);
+                IERC20(config.quote).safeTransfer(config.payment, profit);
             } else {
                 // Klaybay Fee
                 TransferHelper.safeTransferETH(config.treasury, share);

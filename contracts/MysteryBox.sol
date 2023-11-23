@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "./ERC721Token.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@uniswap/lib/contracts/libraries/TransferHelper.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
@@ -20,6 +20,8 @@ interface IMboxKey {
 }
 
 contract MysteryBox is ERC721Token, IERC721Receiver, ReentrancyGuard {
+    using SafeERC20 for IERC20;
+
     address public key;
     address public quote = address(0);
     uint256 public price;
@@ -489,7 +491,7 @@ contract MysteryBox is ERC721Token, IERC721Receiver, ReentrancyGuard {
         //            address(this),
         //            _payment
         //        );
-        IERC20(quote).transferFrom(msg.sender, address(this), _payment);
+        IERC20(quote).safeTransferFrom(msg.sender, address(this), _payment);
 
         for (uint256 i = 0; i < _amount; i++) {
             IMboxKey(key).safeMintTo(msg.sender);
@@ -555,7 +557,7 @@ contract MysteryBox is ERC721Token, IERC721Receiver, ReentrancyGuard {
             //                treasury,
             //                fee
             //            );
-            IERC20(quote).transfer(treasury, fee);
+            IERC20(quote).safeTransfer(treasury, fee);
             // Game company earnings
             //            TransferHelper.safeTransferFrom(
             //                quote,
@@ -563,7 +565,7 @@ contract MysteryBox is ERC721Token, IERC721Receiver, ReentrancyGuard {
             //                payment,
             //                profit
             //            );
-            IERC20(quote).transfer(payment, profit);
+            IERC20(quote).safeTransfer(payment, profit);
         } else {
             // Klaybay Fee
             TransferHelper.safeTransferETH(treasury, fee);

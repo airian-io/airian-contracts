@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "./ERC721Token.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@uniswap/lib/contracts/libraries/TransferHelper.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
@@ -18,6 +18,7 @@ contract Collection is ERC721Token, IERC721Receiver, ReentrancyGuard {
 
     using Counters for Counters.Counter;
     using SafeMath for uint256;
+    using SafeERC20 for IERC20;
 
     Counters.Counter[100] private _tokenIdCounter;
 
@@ -247,7 +248,7 @@ contract Collection is ERC721Token, IERC721Receiver, ReentrancyGuard {
         //            address(this),
         //            _payment
         //        );
-        IERC20(quote).transferFrom(msg.sender, address(this), _payment);
+        IERC20(quote).safeTransferFrom(msg.sender, address(this), _payment);
 
         uint256 startId;
         for (uint256 i = 0; i < itemAmounts.length; i++) {
@@ -331,7 +332,7 @@ contract Collection is ERC721Token, IERC721Receiver, ReentrancyGuard {
             //                treasury,
             //                fee
             //            );
-            IERC20(quote).transfer(treasury, fee);
+            IERC20(quote).safeTransfer(treasury, fee);
             // Creator earnings
             //            TransferHelper.safeTransferFrom(
             //                quote,
@@ -339,7 +340,7 @@ contract Collection is ERC721Token, IERC721Receiver, ReentrancyGuard {
             //                payment,
             //                profit
             //            );
-            IERC20(quote).transfer(payment, profit);
+            IERC20(quote).safeTransfer(payment, profit);
         } else {
             // Talken Fee
             TransferHelper.safeTransferETH(treasury, fee);
