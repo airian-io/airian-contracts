@@ -126,7 +126,10 @@ contract MysteryBox is ERC721Token, IERC721Receiver, ReentrancyGuard {
         _setMboxKey(_key, configValues[2]);
         _setConfig(_payment, _treasury, configValues[3]);
         _setQuote(_quote);
-        assert(address(_witnetRandomness) != address(0));
+        require(
+            address(_witnetRandomness) != address(0),
+            "Wrong WitNET address"
+        );
         witnet = _witnetRandomness;
     }
 
@@ -415,7 +418,7 @@ contract MysteryBox is ERC721Token, IERC721Receiver, ReentrancyGuard {
     }
 
     function _fetchRandomNumber(uint32 max) private {
-        assert(latestRandomizingBlock > 0);
+        require(latestRandomizingBlock > 0, "Randomness is not initialized");
         randomness = witnet.random(max, nonce, latestRandomizingBlock);
         nonce++;
     }

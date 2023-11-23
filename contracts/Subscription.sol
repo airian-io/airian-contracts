@@ -59,6 +59,7 @@ contract Subscription is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
     IWitnetRandomness public immutable witnet;
     uint256 private nonce = 0;
 
+    uint256 public MaxBooking = 100000;
     struct Book {
         address user;
         uint256 staking;
@@ -80,7 +81,7 @@ contract Subscription is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
     mapping(address => uint256) public depositIndex; // Book Index
     uint256 public totStakers = 0;
 
-    Book[] public booking;
+    Book[MaxBooking] public booking;
     uint256 private _inProcess = 0;
     uint256[] private randList;
     uint256 private _used = 0;
@@ -145,7 +146,10 @@ contract Subscription is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         _setConfig(configValues, _quote, _payment, _treasury, _mysterybox);
         _setWhiteList(_whitelist, _types, _andor);
 
-        assert(address(_witnetRandomness) != address(0));
+        require(
+            address(_witnetRandomness) != address(0),
+            "Wrong WitNET address"
+        );
         witnet = _witnetRandomness;
 
         rateAmount = config.total.mul(config.rate).div(100); // 30 = 0.3 = 30%
@@ -177,6 +181,10 @@ contract Subscription is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         isNotAllocated
         nonReentrant
     {
+        require(
+            nDeposit.current() < MaxBooking,
+            "All books are filled already"
+        );
         require(config.quote == address(0), "Wrong quote token");
         require(block.timestamp >= config.launch, "Starking is not started");
 
@@ -234,6 +242,10 @@ contract Subscription is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         isNotAllocated
         nonReentrant
     {
+        require(
+            nDeposit.current() < MaxBooking,
+            "All books are filled already"
+        );
         require(config.quote != address(0), "Wrong quote token");
         require(block.timestamp >= config.launch, "Starking is not started");
 
@@ -567,7 +579,7 @@ contract Subscription is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
     }
 
     function _fetchRandomNumber(uint256 maximum) private {
-        assert(latestRandomizingBlock > 0);
+        require(latestRandomizingBlock > 0, "Randomness is not initialized");
         randomness = witnet.random(
             uint32(maximum),
             nonce,

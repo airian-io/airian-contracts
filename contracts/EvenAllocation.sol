@@ -59,6 +59,7 @@ contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
 
     bool public allocStatus = false;
 
+    uint256 public MaxBooking = 100000;
     struct Book {
         address user;
         uint256 nTickets;
@@ -67,7 +68,7 @@ contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         bool status;
         bool claimed;
     }
-    Book[] public booking;
+    Book[MaxBooking] public booking;
 
     mapping(address => uint256) public depositList; // Deposit Fund
     using Counters for Counters.Counter;
@@ -142,7 +143,10 @@ contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         totalItems = config.total.div(config.perTicket);
         available = totalItems;
 
-        assert(address(_witnetRandomness) != address(0));
+        require(
+            address(_witnetRandomness) != address(0),
+            "Wrong WitNET address"
+        );
         witnet = _witnetRandomness;
 
         // Skip index 0
@@ -167,6 +171,10 @@ contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         isNotAllocated
         nonReentrant
     {
+        require(
+            nDeposit.current() < MaxBooking,
+            "All books are filled already"
+        );
         require(config.quote == address(0), "Wrong quote token");
         require(
             block.timestamp >= config.launch,
@@ -233,6 +241,10 @@ contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         isNotAllocated
         nonReentrant
     {
+        require(
+            nDeposit.current() < MaxBooking,
+            "All books are filled already"
+        );
         require(config.quote != address(0), "Wrong quote token");
         require(
             block.timestamp >= config.launch,
@@ -471,7 +483,7 @@ contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
     }
 
     function _fetchRandomNumber(uint256 maximum) private {
-        assert(latestRandomizingBlock > 0);
+        require(latestRandomizingBlock > 0, "Randomness is not initialized");
         randomness = witnet.random(
             uint32(maximum),
             nonce,
