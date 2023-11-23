@@ -104,11 +104,20 @@ contract AirDrop is ERC721Token, IERC721Receiver, ReentrancyGuard {
     }
 
     function _setLaunch(uint256 _launch) private {
-        launch = _launch;
+        if (_launch == 0) {
+            launch = block.timestamp;
+        } else {
+            launch = _launch;
+        }
         emit SetLaunch(launch);
     }
 
     function _setLockup(uint256 _lockup) private {
+        if (_lockup == 0) {
+            lockup = block.timestamp;
+        } else {
+            lockup = _lockup;
+        }
         lockup = _lockup;
         emit SetLockup(lockup);
     }

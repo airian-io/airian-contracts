@@ -94,11 +94,20 @@ contract Collection is ERC721Token, IERC721Receiver, ReentrancyGuard {
     }
 
     function _setLaunch(uint256 _launch) private {
-        launch = _launch;
+        if (_launch == 0) {
+            launch = block.timestamp;
+        } else {
+            launch = _launch;
+        }
         emit SetLaunch(launch);
     }
 
     function _setLockup(uint256 _lockup) private {
+        if (_lockup == 0) {
+            lockup = block.timestamp;
+        } else {
+            lockup = _lockup;
+        }
         lockup = _lockup;
         emit SetLockup(lockup);
     }
@@ -142,7 +151,8 @@ contract Collection is ERC721Token, IERC721Receiver, ReentrancyGuard {
         uint256[] memory amounts,
         uint256[] memory prices
     ) public onlyRole(MINTER_ROLE) isNotRegistered {
-        require(uris.length == amounts.length, "Array length mismatch");
+        require(uris.length == prices.length, "Array length mismatch");
+        require(amounts.length == prices.length, "Array length mismatch");
 
         itemAmounts = amounts;
         itemURIs = uris;
