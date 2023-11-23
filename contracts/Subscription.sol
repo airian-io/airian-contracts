@@ -549,11 +549,20 @@ contract Subscription is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         return (fee);
     }
 
-    function requestRandomNumber() external payable {
+    //    function requestRandomNumber() external payable {
+    //        latestRandomizingBlock = block.number;
+    //        uint256 _usedFunds = witnet.randomize{value: msg.value}();
+    //        if (_usedFunds < msg.value) {
+    //            payable(msg.sender).transfer(msg.value - _usedFunds);
+    //        }
+    //    }
+    function requestRandomNumber() external payable nonReentrant {
         latestRandomizingBlock = block.number;
         uint256 _usedFunds = witnet.randomize{value: msg.value}();
         if (_usedFunds < msg.value) {
-            payable(msg.sender).transfer(msg.value - _usedFunds);
+            uint256 _amount = msg.value - _usedFunds;
+            (bool success, ) = msg.sender.call{value: _amount}("");
+            require(success, "Failed to payback for randomization fee");
         }
     }
 
