@@ -178,7 +178,7 @@ contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         require(msg.value > 0, "Payment should be greater than zero");
 
         if (depositList[msg.sender] == 0) {
-            require(msg.value >= config.price, "Under least staking amount");
+            //            require(msg.value >= config.price, "Under least staking amount");
             require(
                 msg.value <= config.price.mul(config.maxTicket),
                 "Can't buy more than maximum per wallet"
@@ -244,7 +244,7 @@ contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         require(_payment > 0, "Payment should be greater than zero");
 
         if (depositList[msg.sender] == 0) {
-            require(_payment >= config.price, "Under least staking amount");
+            //            require(_payment >= config.price, "Under least staking amount");
             require(
                 _payment <= config.price.mul(config.maxTicket),
                 "Can't buy more than maximum per wallet"

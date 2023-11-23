@@ -163,7 +163,7 @@ contract Collection is ERC721Token, IERC721Receiver, ReentrancyGuard {
             msg.value == _amount.mul(itemPrices[_itemIx]),
             "value and amount is not match"
         );
-        require(itemAmounts[_itemIx] > itemSolds[_itemIx], "item sold out");
+        //        require(itemAmounts[_itemIx] > itemSolds[_itemIx], "item sold out");
         require(
             itemAmounts[_itemIx] >= itemSolds[_itemIx].add(_amount),
             "lack of items left"
@@ -218,7 +218,7 @@ contract Collection is ERC721Token, IERC721Receiver, ReentrancyGuard {
 
         uint256 balance = IERC20(quote).balanceOf(msg.sender);
         require(balance > _payment, "lack of quote token balance");
-        require(itemAmounts[_itemIx] > itemSolds[_itemIx], "item sold out");
+        //        require(itemAmounts[_itemIx] > itemSolds[_itemIx], "item sold out");
         require(
             itemAmounts[_itemIx] >= itemSolds[_itemIx].add(_amount),
             "lack of items left"
