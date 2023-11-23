@@ -194,14 +194,15 @@ contract Collection is ERC721Token, IERC721Receiver, ReentrancyGuard {
             }
         }
 
+        itemSolds[_itemIx] = itemSolds[_itemIx].add(_amount);
+
         for (uint256 i = 0; i < _amount; i++) {
             uint256 tokenId = startId.add(_tokenIdCounter[_itemIx].current());
-            mintByTokenId(msg.sender, tokenId, itemURIs[_itemIx]);
             _tokenIdCounter[_itemIx].increment();
+            mintByTokenId(msg.sender, tokenId, itemURIs[_itemIx]);
         }
 
         settlement(_itemIx, _amount);
-        itemSolds[_itemIx] = itemSolds[_itemIx].add(_amount);
     }
 
     function buyItemQuote(
@@ -257,14 +258,15 @@ contract Collection is ERC721Token, IERC721Receiver, ReentrancyGuard {
             }
         }
 
+        itemSolds[_itemIx] = itemSolds[_itemIx].add(_amount);
+
         for (uint256 i = 0; i < _amount; i++) {
             uint256 tokenId = startId.add(_tokenIdCounter[_itemIx].current());
-            mintByTokenId(msg.sender, tokenId, itemURIs[_itemIx]);
             _tokenIdCounter[_itemIx].increment();
+            mintByTokenId(msg.sender, tokenId, itemURIs[_itemIx]);
         }
 
         settlement(_itemIx, _amount);
-        itemSolds[_itemIx] = itemSolds[_itemIx].add(_amount);
     }
 
     function buyItemCredit(

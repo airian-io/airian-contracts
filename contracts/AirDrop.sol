@@ -212,10 +212,10 @@ contract AirDrop is ERC721Token, IERC721Receiver, ReentrancyGuard {
         }
 
         tokenId = tokenId.add(_tokenIdCounter[_itemIx].current());
-        mintByTokenId(msg.sender, tokenId, itemURIs[_itemIx]);
         _tokenIdCounter[_itemIx].increment();
         itemSolds[_itemIx] = itemSolds[_itemIx].add(1);
         totalSold = totalSold.add(1);
+        mintByTokenId(msg.sender, tokenId, itemURIs[_itemIx]);
     }
 
     function buyItemCredit(
@@ -255,10 +255,10 @@ contract AirDrop is ERC721Token, IERC721Receiver, ReentrancyGuard {
 
         for (uint256 i = 0; i < amount; i++) {
             uint256 tokenId = startId.add(_tokenIdCounter[_itemIx].current());
-            mintByTokenId(to, tokenId, itemURIs[_itemIx]);
             _tokenIdCounter[_itemIx].increment();
             itemSolds[_itemIx] = itemSolds[_itemIx].add(1);
             totalSold = totalSold.add(1);
+            mintByTokenId(to, tokenId, itemURIs[_itemIx]);
         }
     }
 
