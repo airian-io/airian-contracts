@@ -202,17 +202,30 @@ contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
 
         depositList[msg.sender] = depositList[msg.sender].add(msg.value);
 
-        depositIndex[msg.sender] = nDeposit.current();
-        booking.push(
-            Book({
-                user: msg.sender,
-                nTickets: _nTickets,
-                deposit: msg.value,
-                allocated: 0,
-                status: false,
-                claimed: false
-            })
-        );
+        // Insert only new depositors into booking
+        if (depositIndex[msg.sender] == 0) {
+            depositIndex[msg.sender] = nDeposit.current();
+            booking.push(
+                Book({
+                    user: msg.sender,
+                    nTickets: _nTickets,
+                    deposit: msg.value,
+                    allocated: 0,
+                    status: false,
+                    claimed: false
+                })
+            );
+        } else {
+            uint256 index = depositIndex[msg.sender];
+            // Check one more
+            if (booking[index].user == msg.sender) {
+                booking[index].nTickets = booking[index].nTickets + _nTickets;
+                booking[index].deposit = depositList[msg.sender];
+            } else {
+                revert("Booking list mismatch");
+            }
+        }
+
         for (uint256 i = 0; i < _nTickets; i++) {
             ticketData.push(nDeposit.current());
         }
@@ -270,17 +283,30 @@ contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
 
         depositList[msg.sender] = depositList[msg.sender].add(_payment);
 
-        depositIndex[msg.sender] = nDeposit.current();
-        booking.push(
-            Book({
-                user: msg.sender,
-                nTickets: _nTickets,
-                deposit: _payment,
-                allocated: 0,
-                status: false,
-                claimed: false
-            })
-        );
+        // Insert only new depositors into booking
+        if (depositIndex[msg.sender] == 0) {
+            depositIndex[msg.sender] = nDeposit.current();
+            booking.push(
+                Book({
+                    user: msg.sender,
+                    nTickets: _nTickets,
+                    deposit: _payment,
+                    allocated: 0,
+                    status: false,
+                    claimed: false
+                })
+            );
+        } else {
+            uint256 index = depositIndex[msg.sender];
+            // Check one more
+            if (booking[index].user == msg.sender) {
+                booking[index].nTickets = booking[index].nTickets + _nTickets;
+                booking[index].deposit = depositList[msg.sender];
+            } else {
+                revert("Booking list mismatch");
+            }
+        }
+
         for (uint256 i = 0; i < _nTickets; i++) {
             ticketData.push(nDeposit.current());
         }
@@ -492,16 +518,16 @@ contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         nonce++;
     }
 
-    function _getIndexByAddress(address user) private view returns (uint256) {
-        uint256 selected;
-        for (uint256 i = 1; i < booking.length; i++) {
-            if (booking[i].user == user) {
-                selected = i;
-                break;
-            }
-        }
-        return selected;
-    }
+    //    function _getIndexByAddress(address user) private view returns (uint256) {
+    //        uint256 selected;
+    //        for (uint256 i = 1; i < booking.length; i++) {
+    //            if (booking[i].user == user) {
+    //                selected = i;
+    //                break;
+    //            }
+    //        }
+    //        return selected;
+    //    }
 
     function claim() external nonReentrant {
         require(

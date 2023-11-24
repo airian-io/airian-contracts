@@ -467,10 +467,6 @@ contract Subscription is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
 
     function unStaking(uint256 _amount) public isNotAllocated nonReentrant {
         require(_amount > 0, "Unstake more the zero");
-        require(
-            allocStatus == false,
-            "Can cancel subscription when NFTs are not allocated"
-        );
 
         //        uint256 _index = _getIndexByAddress(msg.sender);
         uint256 _index = depositIndex[msg.sender];
@@ -588,16 +584,16 @@ contract Subscription is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         nonce++;
     }
 
-    function _getIndexByAddress(address user) private view returns (uint256) {
-        uint256 selected;
-        for (uint256 i = 1; i < booking.length; i++) {
-            if (booking[i].user == user) {
-                selected = i;
-                break;
-            }
-        }
-        return selected;
-    }
+    //    function _getIndexByAddress(address user) private view returns (uint256) {
+    //        uint256 selected;
+    //        for (uint256 i = 1; i < booking.length; i++) {
+    //            if (booking[i].user == user) {
+    //                selected = i;
+    //                break;
+    //            }
+    //        }
+    //        return selected;
+    //    }
 
     function claim() external nonReentrant {
         require(depositList[msg.sender] > 0, "Only staked users can claim");

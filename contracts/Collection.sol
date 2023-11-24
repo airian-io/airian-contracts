@@ -39,6 +39,7 @@ contract Collection is ERC721Token, IERC721Receiver, ReentrancyGuard {
     address[] public mandatory;
     bool public flagMandatory = false;
     bool public andOr;
+    bool public isSaleStarted = false;
 
     event SetLaunch(uint256);
     event SetLockup(uint256);
@@ -47,6 +48,14 @@ contract Collection is ERC721Token, IERC721Receiver, ReentrancyGuard {
 
     modifier isNotRegistered() {
         require(isRegistered == false, "Items already registered");
+        _;
+    }
+
+    modifier canSetMandatory() {
+        require(
+            flagMandatory == false && isSaleStarted == false,
+            "Can not set mandatory list"
+        );
         _;
     }
 
@@ -212,6 +221,7 @@ contract Collection is ERC721Token, IERC721Receiver, ReentrancyGuard {
             mintByTokenId(msg.sender, tokenId, itemURIs[_itemIx]);
         }
 
+        if (!isSaleStarted) isSaleStarted = true;
         settlement(_itemIx, _amount);
     }
 
@@ -276,6 +286,7 @@ contract Collection is ERC721Token, IERC721Receiver, ReentrancyGuard {
             mintByTokenId(msg.sender, tokenId, itemURIs[_itemIx]);
         }
 
+        if (!isSaleStarted) isSaleStarted = true;
         settlement(_itemIx, _amount);
     }
 
@@ -325,6 +336,7 @@ contract Collection is ERC721Token, IERC721Receiver, ReentrancyGuard {
         }
 
         itemSolds[_itemIx] = itemSolds[_itemIx].add(_amount);
+        if (!isSaleStarted) isSaleStarted = true;
     }
 
     function settlement(uint256 index, uint256 amount) private {
@@ -383,6 +395,7 @@ contract Collection is ERC721Token, IERC721Receiver, ReentrancyGuard {
     function setMandatory(address[] calldata _nfts, bool _andOr)
         public
         onlyOwner
+        canSetMandatory
     {
         if (_nfts.length > 0) {
             for (uint256 i = 0; i < _nfts.length; i++) {

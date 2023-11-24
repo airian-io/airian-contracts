@@ -49,6 +49,7 @@ contract MysteryBox is ERC721Token, IERC721Receiver, ReentrancyGuard {
     address[] public mandatory;
     bool public flagMandatory = false;
     bool public andOr;
+    bool public isSaleStarted = false;
 
     //    struct Subscription {
     //        address contractAddr;
@@ -81,6 +82,14 @@ contract MysteryBox is ERC721Token, IERC721Receiver, ReentrancyGuard {
 
     modifier isNotRegistered() {
         require(isRegistered == false, "Items already registered");
+        _;
+    }
+
+    modifier canSetMandatory() {
+        require(
+            flagMandatory == false && isSaleStarted == false,
+            "flagMandatory already set"
+        );
         _;
     }
 
@@ -424,14 +433,14 @@ contract MysteryBox is ERC721Token, IERC721Receiver, ReentrancyGuard {
     }
 
     // Extract minted Token ID and shorten items.length
-    function _deleteItemAfterMint(uint256 target) private {
-        for (uint256 i = target; i < items.length; i++) {
-            for (uint256 j = i; j < items.length - 1; j++) {
-                items[j] = items[j + 1];
-            }
-        }
-        items.pop();
-    }
+    //    function _deleteItemAfterMint(uint256 target) private {
+    //        for (uint256 i = target; i < items.length; i++) {
+    //            for (uint256 j = i; j < items.length - 1; j++) {
+    //                items[j] = items[j + 1];
+    //            }
+    //        }
+    //        items.pop();
+    //    }
 
     function buyKeyEth(uint256 _amount) public payable {
         require(quote == address(0), "Wrong quote token");
@@ -468,6 +477,7 @@ contract MysteryBox is ERC721Token, IERC721Receiver, ReentrancyGuard {
             IMboxKey(key).safeMintTo(msg.sender);
         }
 
+        if (!isSaleStarted) isSaleStarted = true;
         settlement(_amount);
     }
 
@@ -511,6 +521,7 @@ contract MysteryBox is ERC721Token, IERC721Receiver, ReentrancyGuard {
             IMboxKey(key).safeMintTo(msg.sender);
         }
 
+        if (!isSaleStarted) isSaleStarted = true;
         settlement(_amount);
     }
 
@@ -541,6 +552,8 @@ contract MysteryBox is ERC721Token, IERC721Receiver, ReentrancyGuard {
         for (uint256 i = 0; i < _amount; i++) {
             IMboxKey(key).safeMintTo(to);
         }
+
+        if (!isSaleStarted) isSaleStarted = true;
     }
 
     function onERC721Received(
@@ -633,6 +646,7 @@ contract MysteryBox is ERC721Token, IERC721Receiver, ReentrancyGuard {
     function setMandatory(address[] calldata _nfts, bool _andOr)
         public
         onlyOwner
+        canSetMandatory
     {
         if (_nfts.length > 0) {
             for (uint256 i = 0; i < _nfts.length; i++) {
