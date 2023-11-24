@@ -398,6 +398,7 @@ contract MysteryBox is ERC721Token, IERC721Receiver, ReentrancyGuard {
     //        }
     //    }
 
+    // Caution : It's needed for Witnet
     receive() external payable {}
 
     function estimateRandomizeFee(uint256 gasPrice)

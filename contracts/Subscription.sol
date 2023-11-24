@@ -545,7 +545,7 @@ contract Subscription is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
     //        }
     //    }
 
-    // 중요 : 반드시 포함되어야 하는 함수
+    // Caution : It's needed for Witnet
     receive() external payable {}
 
     function estimateRandomizeFee(uint256 gasPrice)
