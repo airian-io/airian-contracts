@@ -330,6 +330,12 @@ contract MysteryBox is ERC721Token, IERC721Receiver, ReentrancyGuard {
             );
 
             _fetchRandomNumber(uint32(totalItems));
+            if (_exists(randomness)) {
+                _fetchRandomNumber(uint32(totalItems));
+                if (_exists(randomness)) {
+                    revert("Error on random number generation");
+                }
+            }
 
             mintByClaim(to, getTokenURI(randomness), false);
         }
@@ -367,6 +373,12 @@ contract MysteryBox is ERC721Token, IERC721Receiver, ReentrancyGuard {
             );
 
             _fetchRandomNumber(uint32(totalItems));
+            if (_exists(randomness)) {
+                _fetchRandomNumber(uint32(totalItems));
+                if (_exists(randomness)) {
+                    revert("Error on random number generation");
+                }
+            }
 
             mintByClaim(to, getTokenURI(randomness), true);
         }

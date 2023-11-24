@@ -40,6 +40,9 @@ contract WhiteListNFT is
     }
     mapping(uint256 => WhiteList) public whitelist;
 
+    bool public isMinterSet = false;
+    bool public isStakingSet = false;
+
     event Grant(address, string);
     event SetStaking(address);
     event AddWhitelist(uint32, uint32);
@@ -58,6 +61,16 @@ contract WhiteListNFT is
         onetime = _onetime;
     }
 
+    modifier canAddMinter() {
+        require(isMinterSet == false, "Minter is already added");
+        _;
+    }
+
+    modifier canSetStaking() {
+        require(isStakingSet == false, "Staking set already");
+        _;
+    }
+
     function pause() public onlyRole(PAUSER_ROLE) {
         _pause();
     }
@@ -66,8 +79,9 @@ contract WhiteListNFT is
         _unpause();
     }
 
-    function addMinter(address minter) public onlyOwner {
+    function addMinter(address minter) public onlyOwner canAddMinter {
         _grantRole(MINTER_ROLE, minter);
+        isMinterSet = true;
         emit Grant(minter, "MINTER_ROLE");
     }
 
@@ -164,8 +178,9 @@ contract WhiteListNFT is
             super.supportsInterface(interfaceId);
     }
 
-    function setStaking(address _staking) public onlyOwner {
+    function setStaking(address _staking) public onlyOwner canSetStaking {
         staking = _staking;
+        isStakingSet = true;
 
         emit SetStaking(staking);
     }

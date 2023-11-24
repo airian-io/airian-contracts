@@ -57,7 +57,7 @@ contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
     IWitnetRandomness public immutable witnet;
     uint256 private nonce = 0;
 
-    bool public allocStatus = false;
+    //    bool public allocStatus = false;
 
     uint256 public MaxBooking = 100000;
     struct Book {
@@ -97,15 +97,15 @@ contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         _;
     }
 
-    modifier allocated() {
-        require(allocStatus == true, "Not yet mystery box allocated");
-        _;
-    }
+    //    modifier allocated() {
+    //        require(allocStatus == true, "Not yet mystery box allocated");
+    //        _;
+    //    }
 
-    modifier isNotAllocated() {
-        require(allocStatus == false, "Mystery box is already allocated");
-        _;
-    }
+    //    modifier isNotAllocated() {
+    //        require(allocStatus == false, "Mystery box is already allocated");
+    //        _;
+    //    }
 
     /**
      * index 0 = _price : 가격
@@ -168,9 +168,13 @@ contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         public
         payable
         initialized
-        isNotAllocated
+        //        isNotAllocated
         nonReentrant
     {
+        require(
+            booking[depositIndex[msg.sender]].claimed == false,
+            "already claimed"
+        );
         require(
             nDeposit.current() < MaxBooking,
             "All books are filled already"
@@ -251,9 +255,13 @@ contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
     function buyTicketQuote(uint256 _payment, uint256 _nTickets)
         public
         initialized
-        isNotAllocated
+        //        isNotAllocated
         nonReentrant
     {
+        require(
+            booking[depositIndex[msg.sender]].claimed == false,
+            "already claimed"
+        );
         require(
             nDeposit.current() < MaxBooking,
             "All books are filled already"
@@ -740,9 +748,9 @@ contract EvenAllocation is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         return this.onERC721Received.selector;
     }
 
-    function getAllocated() public view returns (bool) {
-        return allocStatus;
-    }
+    //    function getAllocated() public view returns (bool) {
+    //        return allocStatus;
+    //    }
 
     function getMyTickets() public view returns (uint256) {
         uint256 myTickets = booking[depositIndex[msg.sender]].nTickets;

@@ -176,15 +176,15 @@ contract ERC721Token is
             super.supportsInterface(interfaceId);
     }
 
-    function setHardCap(uint256 _hardCap, string memory _uri) public onlyOwner {
-        hardCap = _hardCap;
-        globalURI = _uri;
-        emit SetHardCap(hardCap);
-    }
+    //    function setHardCap(uint256 _hardCap, string memory _uri) public onlyOwner {
+    //        hardCap = _hardCap;
+    //        globalURI = _uri;
+    //        emit SetHardCap(hardCap);
+    //    }
 
-    function setMysteryBox(address _mbox) public onlyOwner {
-        mysteryBox = _mbox;
-        _grantRole(MINTER_ROLE, _mbox);
-        emit SetMysteryBox(mysteryBox);
-    }
+    //    function setMysteryBox(address _mbox) public onlyOwner {
+    //        mysteryBox = _mbox;
+    //        _grantRole(MINTER_ROLE, _mbox);
+    //        emit SetMysteryBox(mysteryBox);
+    //    }
 }

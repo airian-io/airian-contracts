@@ -227,10 +227,11 @@ contract Subscription is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
             if (whitelist.length > 0) {
                 _stakingNFT(msg.sender);
             }
+
+            totStakers++;
         }
 
         totalFund = totalFund.add(msg.value);
-        totStakers++;
 
         emit Staking(msg.sender, config.quote, msg.value);
     }
@@ -288,6 +289,8 @@ contract Subscription is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
             if (whitelist.length > 0) {
                 _stakingNFT(msg.sender);
             }
+
+            totStakers++;
         }
 
         TransferHelper.safeTransferFrom(
@@ -298,7 +301,6 @@ contract Subscription is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         );
 
         totalFund = totalFund.add(_payment);
-        totStakers++;
 
         emit Staking(msg.sender, config.quote, _payment);
     }

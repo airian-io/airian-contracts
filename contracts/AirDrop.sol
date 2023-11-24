@@ -38,7 +38,7 @@ contract AirDrop is ERC721Token, IERC721Receiver, ReentrancyGuard {
     bool private isRegistered = false;
 
     address[] public mandatory;
-    bool public flagMandatory = false;
+    //    bool public flagMandatory = false;
     bool public andOr;
 
     event SetLaunch(uint256);
@@ -193,22 +193,22 @@ contract AirDrop is ERC721Token, IERC721Receiver, ReentrancyGuard {
         require(block.timestamp > launch, "Not yet launch time reached");
         require(totalItems > totalSold, "aridrop sold out");
 
-        if (flagMandatory) {
-            uint256 nPurchased = 0;
-            for (uint256 i = 0; i < mandatory.length; i++) {
-                uint256 balance = IERC721(mandatory[i]).balanceOf(msg.sender);
-                if (andOr) {
-                    require(balance > 0, "should buy all collections before");
-                    nPurchased = nPurchased.add(1);
-                } else {
-                    if (balance > 0) {
-                        nPurchased = nPurchased.add(1);
-                        break;
-                    }
-                }
-            }
-            require(nPurchased > 0, "should buy all collections before");
-        }
+        //        if (flagMandatory) {
+        //            uint256 nPurchased = 0;
+        //            for (uint256 i = 0; i < mandatory.length; i++) {
+        //                uint256 balance = IERC721(mandatory[i]).balanceOf(msg.sender);
+        //                if (andOr) {
+        //                    require(balance > 0, "should buy all collections before");
+        //                    nPurchased = nPurchased.add(1);
+        //                } else {
+        //                    if (balance > 0) {
+        //                        nPurchased = nPurchased.add(1);
+        //                        break;
+        //                    }
+        //                }
+        //            }
+        //            require(nPurchased > 0, "should buy all collections before");
+        //        }
 
         uint256 _itemIx = 0;
         uint256 tokenId;
