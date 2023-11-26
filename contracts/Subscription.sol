@@ -182,6 +182,10 @@ contract Subscription is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         nonReentrant
     {
         require(
+            booking[depositIndex[msg.sender]].claimed == false,
+            "already claimed"
+        );
+        require(
             nDeposit.current() < MaxBooking,
             "All books are filled already"
         );
@@ -243,6 +247,10 @@ contract Subscription is Ownable, Pausable, IERC721Receiver, ReentrancyGuard {
         isNotAllocated
         nonReentrant
     {
+        require(
+            booking[depositIndex[msg.sender]].claimed == false,
+            "already claimed"
+        );
         require(
             nDeposit.current() < MaxBooking,
             "All books are filled already"

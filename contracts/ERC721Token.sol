@@ -20,7 +20,7 @@ contract ERC721Token is
     AccessControl,
     ERC721Burnable
 {
-    uint256 public hardCap = 0;
+    //    uint256 public hardCap = 0;
     string public globalURI;
     address public mysteryBox;
     address public awsKms;
@@ -77,7 +77,7 @@ contract ERC721Token is
         returns (uint256)
     {
         uint256 tokenId = _tokenIdCounter.current();
-        require(tokenId <= hardCap, "can not mint over than hard cap limit");
+        //        require(tokenId <= hardCap, "can not mint over than hard cap limit");
 
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
