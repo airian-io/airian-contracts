@@ -20,11 +20,14 @@ contract ERC721Token is
     AccessControl,
     ERC721Burnable
 {
-    //    uint256 public hardCap = 0;
+    uint256 public hardCap = 0;
     string public globalURI;
     address public mysteryBox;
     address public awsKms;
     using Counters for Counters.Counter;
+
+    bool public isSetHardCap = false;
+    bool public isSetMysteryBox = false;
 
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
@@ -37,6 +40,16 @@ contract ERC721Token is
     event SetHardCap(uint256);
     event SetMysteryBox(address);
     event SetAwsKms(address);
+
+    modifier canSetHardCap() {
+        require(isSetHardCap == false, "HardCap is already set");
+        _;
+    }
+
+    modifier canSetMysteryBox() {
+        require(isSetMysteryBox == false, "Mystery box is already set");
+        _;
+    }
 
     constructor(string memory name, string memory symbol) ERC721(name, symbol) {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
@@ -176,15 +189,19 @@ contract ERC721Token is
             super.supportsInterface(interfaceId);
     }
 
-    //    function setHardCap(uint256 _hardCap, string memory _uri) public onlyOwner {
-    //        hardCap = _hardCap;
-    //        globalURI = _uri;
-    //        emit SetHardCap(hardCap);
-    //    }
+    function setHardCap(uint256 _hardCap, string memory _uri)
+        public
+        onlyOwner
+        canSetHardCap
+    {
+        hardCap = _hardCap;
+        globalURI = _uri;
+        emit SetHardCap(hardCap);
+    }
 
-    //    function setMysteryBox(address _mbox) public onlyOwner {
-    //        mysteryBox = _mbox;
-    //        _grantRole(MINTER_ROLE, _mbox);
-    //        emit SetMysteryBox(mysteryBox);
-    //    }
+    function setMysteryBox(address _mbox) public onlyOwner canSetMysteryBox {
+        mysteryBox = _mbox;
+        _grantRole(MINTER_ROLE, _mbox);
+        emit SetMysteryBox(mysteryBox);
+    }
 }
