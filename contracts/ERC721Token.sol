@@ -196,12 +196,14 @@ contract ERC721Token is
     {
         hardCap = _hardCap;
         globalURI = _uri;
+        isSetHardCap = true;
         emit SetHardCap(hardCap);
     }
 
     function setMysteryBox(address _mbox) public onlyOwner canSetMysteryBox {
         mysteryBox = _mbox;
         _grantRole(MINTER_ROLE, _mbox);
+        isSetMysteryBox = true;
         emit SetMysteryBox(mysteryBox);
     }
 }
