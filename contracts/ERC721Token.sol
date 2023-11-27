@@ -90,7 +90,7 @@ contract ERC721Token is
         returns (uint256)
     {
         uint256 tokenId = _tokenIdCounter.current();
-        //        require(tokenId <= hardCap, "can not mint over than hard cap limit");
+        require(tokenId <= hardCap, "can not mint over than hard cap limit");
 
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
