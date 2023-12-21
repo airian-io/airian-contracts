@@ -9,7 +9,7 @@ import "./library/Freezable.sol";
 
 contract Air is ERC20Lockable, ERC20Burnable, ERC20Mintable, Freezable {
     using SafeMath for uint256;
-    string private constant _name = "Airian";
+    string private constant _name = "AIR token";
     string private constant _symbol = "AIR";
     uint8 private constant _decimals = 18;
     uint256 private constant _initial_supply = 0;
